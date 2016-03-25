@@ -62,6 +62,14 @@ $( "ul" ).on( "click", ".delete", function() {
   $('.incomplete-items').text(itemsLeft);
 });
 
+// Shows ALL items when clicked
+$(".show-all").on( "click", function() {
+  $( "article" ).closest('li')
+    .css( "display", "inherit" );
+  console.log( $( this ).text() );
+  console.log(42);
+});
+
 // Shows ONLY completed items when clicked
 $(".show-completed").on( "click", function() {
   $( "article" ).not( ".completed" ).closest('li')
