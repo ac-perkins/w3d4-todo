@@ -1,97 +1,106 @@
 (function() {
 
-var itemsLeft = 0;
+  var itemList = [];
+  var itemsLeft = 0;
 
-$("form").on("submit", function ( event ) {
-  var newTodo = $(".new-todo").val();
-  console.log($(".new-todo").val());
-  event.preventDefault();
-  itemsLeft++;
-  console.log(itemsLeft);
-  $('.incomplete-items').text(itemsLeft);
-
-  // var newListItem = $('<li>')
-  //   .append( $('<article>') ).append( $('<button>').attr({ class: 'check' })).after( $('<p>').text(newTodo) );
-
-  var newArticle = $('<article>')
-    .append( $('<button>').attr({ class: 'check' }))
-    .append( $('<p>').text(newTodo) )
-    .append( $('<input>').attr({ type: 'text', class: 'edit-todo', value: newTodo }))
-    .append( $('<button>').attr({ class: 'delete' }).text('X'));
-
-  var newListItem = $('<li>')
-    .append(newArticle);
-
-$(".items")
-  .append(newListItem);
-});
-
-// Toggles completed class on selected article
-$( "ul" ).on( "click", ".check", function() {
-  $(this).closest('article').toggleClass("completed");
-  if ($(this).closest( "article" ).hasClass( "completed" )) {
-    itemsLeft--;
-    $('.incomplete-items').text(itemsLeft);
-  } else {
+  $('form').on('submit', function ( event ) {
+    var newTodo = $('.new-todo').val();
+    itemList.push({todo: newTodo, timeStamp: Date.now()});
+    // itemList.todo = newTodo;
+    // itemList.timeStamp = Date.now();
+    console.log(itemList);
+    event.preventDefault();
+    $('.new-todo').val('');
     itemsLeft++;
     $('.incomplete-items').text(itemsLeft);
-  }
 
-  // $(this).toggleClass("completed");
-});
+    var newArticle = $('<article>')
+      .append( $('<button>').attr({ class: 'check'}))
+      .append( $('<p>').text(newTodo) )
+      .append( $('<input>').attr({ type: 'text', class: 'edit-todo', value: newTodo }))
+      .append( $('<button>').attr({ class:'delete'}).text('X'));
 
-// Allows for editing input
-$( "ul" ).on( "click", "p", function() {
-  $(this).closest('li').addClass("editing");
-  // console.log(42);
+    var newListItem = $('<li>')
+      .append(newArticle);
 
-  // $(".edit-todo").on("submit", function ( event ) {
-  //   newTodo = $(".new-todo").val();
-  //   console.log(42);
-  //   console.log($(".new-todo").val());
-  //   event.preventDefault();
-  //   });
-});
+  $('.items')
+    .append(newListItem);
+  });
 
-// Removes selected ToDO/li when X is clicked
-$( "ul" ).on( "click", ".delete", function() {
-  $(this).closest('li').remove();
-  // $('article').remove();
-  console.log(42);
-  itemsLeft--;
-  $('.incomplete-items').text(itemsLeft);
-});
+  // Toggles completed class on selected article
+  $( 'ul' ).on( 'click', '.check', function() {
+    $(this).closest('article').toggleClass('completed');
+    if ($(this).closest('article').hasClass('completed')) {
+      itemsLeft--;
+      $('.incomplete-items').text(itemsLeft);
+    } else {
+      itemsLeft++;
+      $('.incomplete-items').text(itemsLeft);
+    }
+  });
 
-// Shows ALL items when clicked
-$(".show-all").on( "click", function() {
-  $( "article" ).closest('li')
-    .css( "display", "inherit" );
-  console.log( $( this ).text() );
-  console.log(42);
-});
+  // var editTodo = '';
+  // Allows for editing current list items
+  $( 'ul' ).on( 'click', 'p', function() {
+    $(this).closest('article').addClass('editing');
+    $( ".edit-todo" ).focus();
 
-// Shows ONLY completed items when clicked
-$(".show-completed").on( "click", function() {
-  $( "article" ).not( ".completed" ).closest('li')
-    .css( "display", "none" );
-  // $('article').remove();
-  console.log( $( this ).text() );
-  console.log(42);
-});
+    $('.edit-todo').keydown( function ( event ) {    // Put EVENT IN THESE FUNCTIONS
+      if (event.keyCode === 13) {
+        var editTodo = $(this).closest('article').find('.edit-todo').val();
+        console.log(editTodo);
+        // console.log(newTodo);
+        $(this).closest('article').find('p').text(editTodo);
+        $(this).closest('article').removeClass('editing');
+        event.preventDefault();
+      }
+      });
+  });
 
-// Removes all completed items when Clear completed is clicked
-$(".clear").on( "click", function() {
-  $('.completed').closest('li').remove();
-  // $('article').remove();
-  console.log( $( this ).text() );
-  console.log(42);
-});
+  // Removes selected ToDO/li when X is clicked
+  $( 'ul' ).on( 'click', '.delete', function() {
+    $(this).closest('li').remove();
+    itemsLeft--;
+    $('.incomplete-items').text(itemsLeft);
+
+    itemList.forEach(function removeItem(time, i) {     // THIS NEEDS TO WORK!
+      if (itemList[i].timeStamp ===)
+        itemList.split(i);
+      console.log(itemList);
+    });
+  });
+
+  // Shows ALL items when clicked
+  $('.show-all').on( 'click', function() {
+    $( 'article' ).closest('li').css( 'display', 'inherit' );
+    $('.show-all').addClass('active');
+    $('.show-active').removeClass('active');
+    $('.show-completed').removeClass('active');
+  });
+
+  // Shows ACTIVE items when clicked
+  $('.show-active').on( 'click', function() {
+    $( '.completed' ).closest('li').css( 'display', 'none' );
+    $( 'article' ).not( '.completed' ).closest('li').css( 'display', 'inherit' );
+    $('.show-active').addClass('active');
+    $('.show-all').removeClass('active');
+    $('.show-completed').removeClass('active');
+  });
+
+  // Shows COMPLETED items when clicked
+  $('.show-completed').on( 'click', function() {
+    $( 'article' ).not( '.completed' ).closest('li').css( 'display', 'none' );
+    $( '.completed' ).closest('li').css( 'display', 'inherit' );
+    $('.show-completed').addClass('active');
+    $('.show-all').removeClass('active');
+    $('.show-active').removeClass('active');
+  });
+
+  // Removes all completed items when 'Clear completed' is clicked
+  $('.clear').on( 'click', function() {
+    $('.completed').closest('li').remove();
+    $( 'article' ).not( '.completed' ).closest('li').css( 'display', 'inherit' );
+  });
 
 
 })();
-
-
-
-// var newItem = $('<li>')
-//     .append( $('<a>').attr({ href: newLinkData.link, class: 'design-name' }).text(newLinkData.linkText) )
-//     .append(' by ' + newLinkData.author);
