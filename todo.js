@@ -1,9 +1,14 @@
 (function() {
 
+var itemsLeft = 0;
+
 $("form").on("submit", function ( event ) {
   var newTodo = $(".new-todo").val();
   console.log($(".new-todo").val());
   event.preventDefault();
+  itemsLeft++;
+  console.log(itemsLeft);
+  $('.incomplete-items').text(itemsLeft);
 
   // var newListItem = $('<li>')
   //   .append( $('<article>') ).append( $('<button>').attr({ class: 'check' })).after( $('<p>').text(newTodo) );
@@ -19,6 +24,50 @@ $("form").on("submit", function ( event ) {
 
 $(".items")
   .append(newListItem);
+});
+
+// Toggles completed class on selected article
+$( "ul" ).on( "click", ".check", function() {
+  $(this).closest('article').toggleClass("completed");
+  if ($(this).closest( "article" ).hasClass( "completed" )) {
+    itemsLeft--;
+    $('.incomplete-items').text(itemsLeft);
+  } else {
+    itemsLeft++;
+    $('.incomplete-items').text(itemsLeft);
+  }
+
+  // $(this).toggleClass("completed");
+});
+
+// Allows for editing input
+$( "ul" ).on( "click", "p", function() {
+  $(this).closest('li').addClass("editing");
+  // console.log(42);
+
+  // $(".edit-todo").on("submit", function ( event ) {
+  //   newTodo = $(".new-todo").val();
+  //   console.log(42);
+  //   console.log($(".new-todo").val());
+  //   event.preventDefault();
+  //   });
+});
+
+// Removes selected article when X is clicked
+$( "ul" ).on( "click", ".delete", function() {
+  $(this).closest('li').remove();
+  // $('article').remove();
+  console.log(42);
+  itemsLeft--;
+  $('.incomplete-items').text(itemsLeft);
+});
+
+// Removes all completed items when Clear completed is clicked
+$(".clear").on( "click", function() {
+  $('.completed').closest('li').remove();
+  // $('article').remove();
+  console.log( $( this ).text() );
+  console.log(42);
 });
 
 
