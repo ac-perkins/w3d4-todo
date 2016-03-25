@@ -53,13 +53,22 @@ $( "ul" ).on( "click", "p", function() {
   //   });
 });
 
-// Removes selected article when X is clicked
+// Removes selected ToDO/li when X is clicked
 $( "ul" ).on( "click", ".delete", function() {
   $(this).closest('li').remove();
   // $('article').remove();
   console.log(42);
   itemsLeft--;
   $('.incomplete-items').text(itemsLeft);
+});
+
+// Shows ONLY completed items when clicked
+$(".show-completed").on( "click", function() {
+  $( "article" ).not( ".completed" ).closest('li')
+    .css( "display", "none" );
+  // $('article').remove();
+  console.log( $( this ).text() );
+  console.log(42);
 });
 
 // Removes all completed items when Clear completed is clicked
