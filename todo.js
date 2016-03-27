@@ -43,7 +43,6 @@
     }
     var todos = $('.items').html();
     localStorage.setItem('todos', todos);
-    var incItems = itemsLeft;
     localStorage.setItem('incItems', itemsLeft);
   });
 
